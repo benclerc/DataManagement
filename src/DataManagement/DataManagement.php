@@ -84,7 +84,7 @@ class DataManagement {
 	*	Function used to data from one table (or several table with join) :
 	*	@param string $table Table name.
 	*	@param array $order Array of column name and wanted order e.g. ['column' => 'ASC/DESC'].
-	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
+	*	@param array $join Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
 	*	@param array $filter Array with table name as key and array of array as value with column name and filter value e.g. ['table'=>[['columnname'=>'data']]]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param int $limit Number of max rows e.g. 50.
 	*	@param int $offset Offset for returned rows e.g. 100.
@@ -344,7 +344,7 @@ class DataManagement {
 	*	Function used to count how many times a result exist.
 	*	@param string $table Table name.
 	*	@param string $column Column name.
-	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $where Array of data pointing the rows to count e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
 	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
 	*	@return mixed Request's status on fail or int on success.
 	*/
@@ -398,7 +398,8 @@ class DataManagement {
 	*	Function used to sum all the values of a particular column.
 	*	@param string $table Table name.
 	*	@param string $column Column name.
-	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $where Array of data pointing the rows to sum e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
 	*	@return mixed Request's status on fail or int on success.
 	*/
 	public function sum(string $table, string $column, array $where, array $join = NULL) {
