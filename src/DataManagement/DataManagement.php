@@ -401,7 +401,7 @@ class DataManagement {
 	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
 	*	@return mixed Request's status on fail or int on success.
 	*/
-	public function sum(string $table, array $column, array $where, array $join = NULL) {
+	public function sum(string $table, string $column, array $where, array $join = NULL) {
 		// Start SQL request creation
 		$sql = "SELECT SUM($column) FROM $table";
 		// Adding joined tables if wanted
