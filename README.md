@@ -8,6 +8,26 @@ PHP Class providing simple and compact database requests. Useful for small proje
 * Use SQL transaction
 * Execute custom SQL request
 
+## Table of contents
+
+<!--ts-->
+   * [Getting started](#getting-started)
+   * [Documentation](#documentation)
+      * [connector()](#connector)
+      * [beginTransaction()](#begintransaction)
+      * [commit()](#commit)
+      * [rollback()](#rollback)
+      * [select()](#select)
+      * [customSelect()](#customselect)
+      * [insert()](#insert)
+      * [customInsert()](#custominsert)
+      * [update()](#update)
+      * [delete()](#delete)
+      * [count()](#count)
+      * [sum()](#sum)
+      * [customSQL()](#customsql)
+<!--te-->
+
 ## Getting started
 
 1. Get [Composer](http://getcomposer.org/)
