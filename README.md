@@ -65,9 +65,9 @@ This method is used to retrieve data from the database. It can be a very simple 
 Parameters :
 
 * $table string : Table name.
-* $order array (optional) : Array of column name and wanted order e.g. `['column' => 'ASC/DESC']`.
-* $join array (optional) : Array with wanted join table name as key and array of needed values as values e.g. `['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]]`.
-* $filter array (optional) : Array with table name as key and array of array as value with column name and filter value e.g. `['table'=>[['columnname'=>'data']]]`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
+* $order array (optional) : Array of column name and wanted order e.g. ['column' => 'ASC/DESC']. If no value is passed then default value is used : 'ASC'.
+* $join array (optional) : Array with wanted join table name as key and array of needed values as values e.g. `['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]]`. From table argument is optionnal, if not set $table will be used instead.
+* $where array (optional) : Array with table name as key and array as value with column name and filter value e.g. `['table'=>['columnname'=>'data']]`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 * $limit int (optional) : Number of max rows e.g. 50.
 * $offset int (optional) : Offset for returned rows e.g. 100.
 * $columns array (optional) : Array of column name.
@@ -82,10 +82,10 @@ $res = $db->select('BOOKS')['fetchAll'];
 // Get one book, id = 42
 $res = $db->select('BOOKS', NULL, NULL, ['BOOKS'=>[['books_id'=>42]]])['fetch']; // Note the NULL values because we do not want order or join. And also note the fetch instead of fetchAll because we know we have only one result.
 // Get all books with their authors, results ordered on the book name from A to Z
-$res = $db->select('BOOKS', ['books_name'=>'ASC'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']])['fetchAll'];
+$res = $db->select('BOOKS', ['books_name'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']])['fetchAll'];
 // Get all books with the reference in the list + their authors, results ordered on the book name from A to Z and author name from Z to A, limit to 10 results with an offset of 10 (page 2)
 $referenceList = [37483, 27949, 49303, 20438];
-$res = $db->select('BOOKS', ['books_name'=>'ASC', 'authors_name'=>'DESC'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']], ['BOOKS'=>[['books_reference'=>$referenceList]]], 10, 10)['fetchAll'];
+$res = $db->select('BOOKS', ['books_name', 'authors_name'=>'DESC'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']], ['BOOKS'=>['books_reference'=>$referenceList]], 10, 10)['fetchAll'];
 // Get all books with their subcategories and categories
 $res = $db->select('BOOKS', NULL, ['SUBCATEGORIES'=>['INNER', 'books_refsubcategory', 'subcategories_id'], 'CATEGORIES'=>['INNER', 'subcategories_refcategory', 'categories_id', 'SUBCATEGORIES']])['fetchAll']; // Note the fourth element in the element 'CATEGORIES' in the join array.
 ```
@@ -174,7 +174,7 @@ Parameters :
 
 * $table string : Table name.
 * $data array : Array of data e.g. `['columnname'=>'data']`.
-* $where array : Array of data pointing the row to update e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+* $where array : Array of data pointing the row to update e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 
 Return value : boolean representing the request's status.
 
@@ -212,7 +212,7 @@ This method is used to delete data from the database. It is highly recommended t
 Parameters :
 
 * $table string : Table name.
-* $where array : Array of data pointing the rows to count e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+* $where array : Array of data pointing the row to update e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 
 Return value : boolean representing the request's status.
 
@@ -251,7 +251,7 @@ Parameters :
 
 * $table string : Table name.
 * $column string : Column name.
-* $where array : Array of data pointing the row to update e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+* $where array : Array with table name as key and array as value with column name and filter value e.g. `['table'=>['columnname'=>'data']]`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 * $join array (optional) : = Array with wanted join table name as key and array of needed values as values e.g. `['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]]`.
 
 Return value : request's status on fail or int on success.
@@ -273,7 +273,7 @@ Parameters :
 
 * $table string : Table name.
 * $column string : Column name.
-* $where array : Array of data pointing the rows to sum e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+* $where array : Array with table name as key and array as value with column name and filter value e.g. `['table'=>['columnname'=>'data']]`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 * $join array (optional) : = Array with wanted join table name as key and array of needed values as values e.g. `['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]]`.
 
 Return value : request's status on fail or int on success.
