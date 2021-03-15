@@ -102,7 +102,7 @@ class DataManagement {
 	*	@param int $limit Number of max rows e.g. 50.
 	*	@param int $offset Offset for returned rows e.g. 100.
 	*	@param array $columns Array of column name.
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns 3 PHP arrays : 'fetch' => first result (in an array), 'fetchAll' => array of all the results, 'rowCount' => number of results.
+	*	@return mixed If debug set to TRUE : return forged SQL request, else returns the fetchAll results.
 	*/
 	public function select(string $table, array $order = NULL, array $join = NULL, array $where = NULL, int $limit = NULL, int $offset = NULL, array $columns = ['*']) {
 		// Start SQL request creation
@@ -153,14 +153,10 @@ class DataManagement {
 			$this->debug = FALSE;
 			return $sql;
 		} else {
-			// Preparing the execution
+			// Preparing the execution and return results
 			$query = $this->connector->prepare($sql);
 			$query->execute($data);
-			// Format return array
-			$return['rowCount'] = $query->rowCount();
-			$return['fetchAll'] = $query->fetchAll();
-			$return['fetch'] = (count($return['fetchAll']) > 0) ? $return['fetchAll'][0] : NULL;
-			return $return;
+			return $query->fetchAll();
 		}
 	}
 
@@ -169,17 +165,13 @@ class DataManagement {
 	*	Function used to retrieve data from the database using a custom SQL request when wanted result is not possible with classic select() method.
 	*	@param string $sql SQL request.
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
-	*	@return array 3 PHP arrays : 'fetch' => first result (in an array), 'fetchAll' => array of all the results, 'rowCount' => number of results.
+	*	@return array Returns the fetchAll results.
 	*/
 	public function customSelect(string $sql, array $data = NULL) : array {
-		// Preparing the execution
+		// Preparing the execution and return results
 		$query = $this->connector->prepare($sql);
 		$query->execute($data);
-		// Format return array
-		$return['rowCount'] = $query->rowCount();
-		$return['fetchAll'] = $query->fetchAll();
-		$return['fetch'] = (count($return['fetchAll']) > 0) ? $return['fetchAll'][0] : NULL;
-		return $return;
+		return $query->fetchAll();
 	}
 
 

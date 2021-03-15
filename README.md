@@ -37,7 +37,7 @@ This class was not tested on PHP version < 7.3, thus it is not recommended to us
 2. Install the library using composer `composer require benclerc/datamanagement`.
 3. Add the following to your application's main PHP file `require 'vendor/autoload.php';`.
 4. Instanciate the class with the database's connection information `$db = \DataManagement\DataManagement('pgsql', 'localhost', 5432, 'myDb', 'myUser', 'myUserPassword');`.
-5. Start using the library `$books = $db->select('BOOKS')['fetchAll'];`.
+5. Start using the library `$books = $db->select('BOOKS');`.
 
 ## Documentation
 
@@ -104,22 +104,22 @@ Parameters :
 * $offset int (optional) : Offset for returned rows e.g. 100.
 * $columns array (optional) : Array of column name.
 
-Return value : an array of 3 PHP arrays : 'fetch' => first result (in an array), 'fetchAll' => array of all the results, 'rowCount' => number of results.
+Return value : If debug set to TRUE : return forged SQL request, else returns the fetchAll results.
 
 Examples :
 
 ```php
 // Get all books
-$res = $db->select('BOOKS')['fetchAll'];
+$res = $db->select('BOOKS');
 // Get one book, id = 42
-$res = $db->select('BOOKS', NULL, NULL, ['BOOKS'=>['books_id'=>42]])['fetch']; // Note the NULL values because we do not want order or join. And also note the fetch instead of fetchAll because we know we have only one result.
+$res = $db->select('BOOKS', NULL, NULL, ['BOOKS'=>['books_id'=>42]])[0]; // Note the NULL values because we do not want order or join. And also note [0] because we know we have only one result so we can select it directly.
 // Get all books with their authors, results ordered on the book name from A to Z
-$res = $db->select('BOOKS', ['books_name'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']])['fetchAll'];
+$res = $db->select('BOOKS', ['books_name'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']]);
 // Get all books with the reference in the list + their authors, results ordered on the book name from A to Z and author name from Z to A, limit to 10 results with an offset of 10 (page 2)
 $referenceList = [37483, 27949, 49303, 20438];
-$res = $db->select('BOOKS', ['books_name', 'authors_name'=>'DESC'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']], ['BOOKS'=>['books_reference'=>$referenceList]], 10, 10)['fetchAll'];
+$res = $db->select('BOOKS', ['books_name', 'authors_name'=>'DESC'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']], ['BOOKS'=>['books_reference'=>$referenceList]], 10, 10);
 // Get all books with their subcategories and categories
-$res = $db->select('BOOKS', NULL, ['SUBCATEGORIES'=>['INNER', 'books_refsubcategory', 'subcategories_id'], 'CATEGORIES'=>['INNER', 'subcategories_refcategory', 'categories_id', 'SUBCATEGORIES']])['fetchAll']; // Note the fourth element in the element 'CATEGORIES' in the join array.
+$res = $db->select('BOOKS', NULL, ['SUBCATEGORIES'=>['INNER', 'books_refsubcategory', 'subcategories_id'], 'CATEGORIES'=>['INNER', 'subcategories_refcategory', 'categories_id', 'SUBCATEGORIES']]); // Note the fourth element in the element 'CATEGORIES' in the join array.
 ```
 
 ### customSelect()
@@ -131,15 +131,15 @@ Parameters :
 * $sql string : SQL request.
 * $data array (optional) : Array of data e.g. `['columnname'=>'data']` or if you use `?` in the request : `['data1', 'data2']`.
 
-Return value : an array of 3 PHP arrays : 'fetch' => first result (in an array), 'fetchAll' => array of all the results, 'rowCount' => number of results.
+Return value : Array of the fetchAll results.
 
 Examples :
 
 ```php
 // For request with subqueries for example 
-$res = $db->customSelect('SELECT * FROM BOOKS WHERE books_id IN (SELECT orders_refbook FROM ORDERS WHERE orders_refclient = :id);', ['id'=>42])['fetchAll'];
+$res = $db->customSelect('SELECT * FROM BOOKS WHERE books_id IN (SELECT orders_refbook FROM ORDERS WHERE orders_refclient = :id);', ['id'=>42]);
 // Or to filter using an other operator than =
-$res = $db->customSelect('SELECT * FROM BOOKS WHERE books_release > 2000-01-01')['fetchAll'];
+$res = $db->customSelect('SELECT * FROM BOOKS WHERE books_release > 2000-01-01');
 ```
 
 ### insert()
@@ -151,7 +151,7 @@ Parameters :
 * $table string : Table name.
 * $data array : Array of data e.g. `['columnname'=>'data']`.
 
-Return value : an array with 2 rows : 'raw' => the database's raw response, 'lastInsertId' => the last insert id.
+Return value : If debug set to TRUE : return forged SQL request, else returns array with 2 rows : 'raw' => the database's raw response, 'lastInsertId' => the last insert id.
 
 Examples :
 
@@ -208,7 +208,7 @@ Parameters :
 * $data array : Array of data e.g. `['columnname'=>'data']`.
 * $where array : Array of data pointing the row to update e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 
-Return value : boolean representing the request's status.
+Return value : If debug set to TRUE : return forged SQL request, else returns request's status as boolean.
 
 Example :
 
@@ -246,7 +246,7 @@ Parameters :
 * $table string : Table name.
 * $where array : Array of data pointing the row to update e.g. `['columnname'=>'data']`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 
-Return value : boolean representing the request's status.
+Return value : If debug set to TRUE : return forged SQL request, else returns request's status as boolean.
 
 Example :
 
@@ -286,7 +286,7 @@ Parameters :
 * $where array : Array with table name as key and array as value with column name and filter value e.g. `['table'=>['columnname'=>'data']]`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 * $join array (optional) : = Array with wanted join table name as key and array of needed values as values e.g. `['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]]`.
 
-Return value : request's status on fail or int on success.
+Return value : If debug set to TRUE : return forged SQL request, else returns request's status as boolean on fail or int on success.
 
 Example :
 
@@ -308,7 +308,7 @@ Parameters :
 * $where array : Array with table name as key and array as value with column name and filter value e.g. `['table'=>['columnname'=>'data']]`. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 * $join array (optional) : = Array with wanted join table name as key and array of needed values as values e.g. `['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]]`.
 
-Return value : request's status on fail or int on success.
+Return value : If debug set to TRUE : return forged SQL request, else returns request's status as boolean on fail or int on success.
 
 Example :
 
