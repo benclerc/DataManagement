@@ -30,7 +30,7 @@ PHP Class providing simple and compact database requests. Useful for small proje
 
 ## Getting started
 
-1. Get [Composer](http://getcomposer.org/)
+1. Get [Composer](http://getcomposer.org/).
 2. Install the library using composer `composer require benclerc/datamanagement`.
 3. Add the following to your application's main PHP file `require 'vendor/autoload.php';`.
 4. Instanciate the class with the database's connection information `$db = \DataManagement\DataManagement('pgsql', 'localhost', 5432, 'myDb', 'myUser', 'myUserPassword');`.
