@@ -85,13 +85,13 @@ class DataManagement {
 	*	@param string $table Table name.
 	*	@param array $order Array of column name and wanted order e.g. ['column' => 'ASC/DESC'].
 	*	@param array $join Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
-	*	@param array $filter Array with table name as key and array of array as value with column name and filter value e.g. ['table'=>[['columnname'=>'data']]]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
+	*	@param array $where Array with table name as key and array as value with column name and filter value e.g. ['table'=>['columnname'=>'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param int $limit Number of max rows e.g. 50.
 	*	@param int $offset Offset for returned rows e.g. 100.
 	*	@param array $columns Array of column name.
 	*	@return array 3 PHP arrays : 'fetch' => first result (in an array), 'fetchAll' => array of all the results, 'rowCount' => number of results.
 	*/
-	public function select(string $table, array $order = NULL, array $join = NULL, array $filter = NULL, int $limit = NULL, int $offset = NULL, array $columns = ['*']) : array {
+	public function select(string $table, array $order = NULL, array $join = NULL, array $where = NULL, int $limit = NULL, int $offset = NULL, array $columns = ['*']) : array {
 		// Start SQL request creation
 		$sql = "SELECT";
 		// Adding the wanted columns
@@ -104,45 +104,12 @@ class DataManagement {
 		if (!empty($join)) {
 			$sql .= $this->join($table, $join);
 		}
-		// Adding filter if wanted
+		// Adding where clause if wanted
 		$data = NULL;
-		if (!empty($filter)) {
-			$sql .= " WHERE";
-			$i = 0;
-			foreach ($filter as $key => $value) {
-				foreach ($value as $key2 => $value2) {
-					foreach ($value2 as $key3 => $value3) {
-						switch ($value3) {
-							case 'NULL':
-								$sql .= ($i == 0) ? " $key.$key3 IS NULL" : " AND $key.$key3 IS NULL";
-								break;
-							case '!NULL':
-								$sql .= ($i == 0) ? " $key.$key3 IS NOT NULL" : " AND $key.$key3 IS NOT NULL";
-								break;
-							case 'TRUE':
-								$sql .= ($i == 0) ? " $key.$key3 IS TRUE" : " AND $key.$key3 IS TRUE";
-								break;
-							case 'FALSE':
-								$sql .= ($i == 0) ? " $key.$key3 IS FALSE" : " AND $key.$key3 IS FALSE";
-								break;
-							default:
-								if (is_array($value3)) {
-									$in = '';
-									for ($j = 0; $j < count($value3); $j++) {
-										$in .= ($j == 0) ? ":filter$key$key3$j" : ", :filter$key$key3$j";
-										$data["filter$key$key3$j"] = $value3[$j];
-									}
-									$sql .= ($i == 0) ? " $key.$key3 IN ($in)" : " AND $key.$key3 IN ($in)";
-								} else {
-									$sql .= ($i == 0) ? " $key.$key3 = :filter$key$key3" : " AND $key.$key3 = :filter$key$key3";
-									$data["filter$key$key3"] = $value3;
-								}
-								break;
-						}
-						$i++;
-					}
-				}
-			}
+		if (!empty($where)) {
+			$resWhere = $this->where($where);
+			$sql .= $resWhere['sql'];
+			$data = $resWhere['data'];
 		}
 		// Adding order if wanted
 		if (!empty($order)) {
@@ -245,7 +212,7 @@ class DataManagement {
 	*	Function used to update row(s) in a table of the database.
 	*	@param string $table Table name.
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
-	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@return bool Request's status.
 	*/
 	public function update(string $table, array $data, array $where) : bool {
@@ -258,35 +225,13 @@ class DataManagement {
 			$i++;
 		}
 		// Adding the where clause
-		$sql .= " WHERE";
-		$i = 0;
-		$whereData = NULL;
-		foreach ($where as $key => $value) {
-			switch ($value) {
-				case 'NULL':
-					$sql .= ($i == 0) ? " $key IS NULL" : " AND $key IS NULL";
-					break;
-				case '!NULL':
-					$sql .= ($i == 0) ? " $key IS NOT NULL" : " AND $key IS NOT NULL";
-					break;
-				case 'TRUE':
-					$sql .= ($i == 0) ? " $key IS TRUE" : " AND $key IS TRUE";
-					break;
-				case 'FALSE':
-					$sql .= ($i == 0) ? " $key IS FALSE" : " AND $key IS FALSE";
-					break;
-				default:
-					$sql .= ($i == 0) ? " $key = :where$key" : " AND $key = :where$key";
-					$whereData["where$key"] = $value;
-					break;
-			}
-			$i++;
-		}
+		$resWhere = $this->where([$table=>$where]);
+		$sql .= $resWhere['sql'];
 		// Closing the query
 		$sql .= ";";
 		// Merging data's array and where clause's array (if needed)
-		if (!empty($whereData)) {
-			$data = array_merge($data, $whereData);
+		if (!empty($resWhere['data'])) {
+			$data = array_merge($data, $resWhere['data']);
 		}
 		// Preparing the execution
 		$query = $this->connector->prepare($sql);
@@ -297,41 +242,20 @@ class DataManagement {
 	/**
 	*	Function used to delete row(s) in a table of the database.
 	*	@param string $table Table name.
-	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@return bool Request's status.
 	*/
 	public function delete(string $table, array $where) : bool {
 		// Start SQL request creation
-		$sql = "DELETE FROM $table WHERE";
+		$sql = "DELETE FROM $table";
 		// Adding where clause
-		$i = 0;
-		$data = NULL;
-		foreach ($where as $key => $value) {
-			switch ($value) {
-				case 'NULL':
-					$sql .= ($i == 0) ? " $key IS NULL" : " AND $key IS NULL";
-					break;
-				case '!NULL':
-					$sql .= ($i == 0) ? " $key IS NOT NULL" : " AND $key IS NOT NULL";
-					break;
-				case 'TRUE':
-					$sql .= ($i == 0) ? " $key IS TRUE" : " AND $key IS TRUE";
-					break;
-				case 'FALSE':
-					$sql .= ($i == 0) ? " $key IS FALSE" : " AND $key IS FALSE";
-					break;
-				default:
-					$sql .= ($i == 0) ? " $key = :$key" : " AND $key = :$key";
-					$data["$key"] = $value;
-					break;
-			}
-			$i++;
-		}
+		$resWhere = $this->where([$table=>$where]);
+		$sql .= $resWhere['sql'];
 		// Closing the query
 		$sql .= ";";
 		// Preparing the execution
 		$query = $this->connector->prepare($sql);
-		return $query->execute($data);
+		return $query->execute($resWhere['data']);
 	}
 
 
@@ -339,7 +263,7 @@ class DataManagement {
 	*	Function used to count how many times a result exist.
 	*	@param string $table Table name.
 	*	@param string $column Column name.
-	*	@param array $where Array of data pointing the rows to count e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $where Array with table name as key and array as value with column name and filter value e.g. ['table'=>['columnname'=>'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
 	*	@return mixed Request's status on fail or int on success.
 	*/
@@ -351,35 +275,13 @@ class DataManagement {
 			$sql .= $this->join($table, $join);
 		}
 		// Adding where clause
-		$sql .= " WHERE";
-		$i = 0;
-		$data = NULL;
-		foreach ($where as $key => $value) {
-			switch ($value) {
-				case 'NULL':
-					$sql .= ($i == 0) ? " $key IS NULL" : " AND $key IS NULL";
-					break;
-				case '!NULL':
-					$sql .= ($i == 0) ? " $key IS NOT NULL" : " AND $key IS NOT NULL";
-					break;
-				case 'TRUE':
-					$sql .= ($i == 0) ? " $key IS TRUE" : " AND $key IS TRUE";
-					break;
-				case 'FALSE':
-					$sql .= ($i == 0) ? " $key IS FALSE" : " AND $key IS FALSE";
-					break;
-				default:
-					$sql .= ($i == 0) ? " $key = :$key" : " AND $key = :$key";
-					$data["$key"] = $value;
-					break;
-			}
-			$i++;
-		}
+		$resWhere = $this->where($where);
+		$sql .= $resWhere['sql'];
 		// Closing the query
 		$sql .= ";";
 		// Preparing the execution
 		$query = $this->connector->prepare($sql);
-		$query->execute($data);
+		$query->execute($resWhere['data']);
 		return $query->fetch()[0];
 	}
 
@@ -388,7 +290,7 @@ class DataManagement {
 	*	Function used to sum all the values of a particular column.
 	*	@param string $table Table name.
 	*	@param string $column Column name.
-	*	@param array $where Array of data pointing the rows to sum e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.
+	*	@param array $where Array with table name as key and array as value with column name and filter value e.g. ['table'=>['columnname'=>'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
 	*	@return mixed Request's status on fail or int on success.
 	*/
@@ -400,17 +302,13 @@ class DataManagement {
 			$sql .= $this->join($table, $join);
 		}
 		// Adding where clause
-		$sql .= " WHERE";
-		$i = 0;
-		foreach ($where as $key => $value) {
-			$sql .= ($i == 0) ? " $key = :$key" : " AND $key = :$key";
-			$i++;
-		}
+		$resWhere = $this->where($where);
+		$sql .= $resWhere['sql'];
 		// Closing the query
 		$sql .= ";";
 		// Preparing the execution
 		$query = $this->connector->prepare($sql);
-		$query->execute($where);
+		$query->execute($resWhere['data']);
 		return $query->fetch()[0];
 	}
 
@@ -441,6 +339,52 @@ class DataManagement {
 			$sql .= " $value[0] JOIN $key ON $value[3].$value[1] = $key.$value[2]";
 		}
 		return $sql;
+	}
+
+
+	/**
+	*	Function creating where clauses in the request.
+	*	@param array $where Array with table name as key and array of array as value with column name and filter value e.g. ['table'=>[['columnname'=>'data']]]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
+	*	@return string SQL request with all wanted where clauses.
+	*/
+	private function where(array $where) : array {
+		$sql = " WHERE";
+		$i = 0;
+		$data = NULL;
+		foreach ($where as $key => $value) {
+			foreach ($value as $key2 => $value2) {
+				$sql .= ($i > 0) ? " AND" : "";
+				switch ($value2) {
+					case 'NULL':
+						$sql .= " $key.$key2 IS NULL";
+						break;
+					case '!NULL':
+						$sql .= " $key.$key2 IS NOT NULL";
+						break;
+					case 'TRUE':
+						$sql .= " $key.$key2 IS TRUE";
+						break;
+					case 'FALSE':
+						$sql .= " $key.$key2 IS FALSE";
+						break;
+					default:
+						if (is_array($value2)) {
+							$in = '';
+							for ($j = 0; $j < count($value2); $j++) {
+								$in .= ($j == 0) ? ":where$key$key2$j" : ", :where$key$key2$j";
+								$data["where$key$key2$j"] = $value2[$j];
+							}
+							$sql .= " $key.$key2 IN ($in)";
+						} else {
+							$sql .= " $key.$key2 = :where$key$key2";
+							$data["where$key$key2"] = $value2;
+						}
+						break;
+				}
+				$i++;
+			}
+		}
+		return ['sql'=>$sql, 'data'=>$data];
 	}
 
 }
