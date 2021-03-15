@@ -76,6 +76,16 @@ Search.appendIndex(
             "summary": "Function\u0020used\u0020to\u0020send\u0020a\u0020custom\u0020request\u0020SQL\u0020of\u0020any\u0020type.",
             "url": "classes/DataManagement-DataManagement.html#method_customSQL"
         },                {
+            "fqsen": "\\DataManagement\\DataManagement\u003A\u003Ajoin\u0028\u0029",
+            "name": "join",
+            "summary": "Function\u0020creating\u0020join\u0020clauses\u0020in\u0020the\u0020request.",
+            "url": "classes/DataManagement-DataManagement.html#method_join"
+        },                {
+            "fqsen": "\\DataManagement\\DataManagement\u003A\u003Awhere\u0028\u0029",
+            "name": "where",
+            "summary": "Function\u0020creating\u0020where\u0020clauses\u0020in\u0020the\u0020request.",
+            "url": "classes/DataManagement-DataManagement.html#method_where"
+        },                {
             "fqsen": "\\",
             "name": "\\",
             "summary": "",

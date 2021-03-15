@@ -219,6 +219,20 @@
 </dt>
 <dd>Function used to update row(s) in a table of the database.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a href="classes/DataManagement-DataManagement.html#method_join">join()</a>
+    <span>
+                        &nbsp;: string    </span>
+</dt>
+<dd>Function creating join clauses in the request.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a href="classes/DataManagement-DataManagement.html#method_where">where()</a>
+    <span>
+                        &nbsp;: string    </span>
+</dt>
+<dd>Function creating where clauses in the request.</dd>
+
         </dl>
 
 
@@ -509,7 +523,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">351</span>
+    <span class="phpdocumentor-element-found-in__line">270</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to count how many times a result exist.</p>
@@ -545,7 +559,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array of data pointing the rows to count e.g. ['columnname'=&gt;'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.</p>
+                    <section class="phpdocumentor-description"><p>Array with table name as key and array as value with column name and filter value e.g. ['table'=&gt;['columnname'=&gt;'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
 </section>
 
             </dd>
@@ -583,7 +597,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">239</span>
+    <span class="phpdocumentor-element-found-in__line">201</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to insert a row in a table of the database using a custom SQL request when wanted result is not possible with classic insert() method.</p>
@@ -639,7 +653,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to retrieve data from the database using a custom SQL request when wanted result is not possible with classic select() method.</p>
@@ -695,7 +709,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">439</span>
+    <span class="phpdocumentor-element-found-in__line">322</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to send a custom request SQL of any type.</p>
@@ -751,7 +765,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">308</span>
+    <span class="phpdocumentor-element-found-in__line">248</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to delete row(s) in a table of the database.</p>
@@ -778,7 +792,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array of data pointing the row to update e.g. ['columnname'=&gt;'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.</p>
+                    <section class="phpdocumentor-description"><p>Array of data pointing the row to update e.g. ['columnname'=&gt;'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
 </section>
 
             </dd>
@@ -807,7 +821,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">206</span>
+    <span class="phpdocumentor-element-found-in__line">168</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to insert a row in a table of the database.</p>
@@ -905,7 +919,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                <span class="phpdocumentor-signature__name">select</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$table</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$order</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$join</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filter</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$columns</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[&#039;*&#039;]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                <span class="phpdocumentor-signature__name">select</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$table</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$order</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$join</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$where</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">NULL</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$columns</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[&#039;*&#039;]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -939,11 +953,11 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$filter</span>
+                <span class="phpdocumentor-signature__argument__name">$where</span>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                  = <span class="phpdocumentor-signature__argument__default-value">NULL</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array with table name as key and array of array as value with column name and filter value e.g. ['table'=&gt;[['columnname'=&gt;'data']]]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
+                    <section class="phpdocumentor-description"><p>Array with table name as key and array as value with column name and filter value e.g. ['table'=&gt;['columnname'=&gt;'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
 </section>
 
             </dd>
@@ -999,7 +1013,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">405</span>
+    <span class="phpdocumentor-element-found-in__line">297</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to sum all the values of a particular column.</p>
@@ -1035,7 +1049,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array of data pointing the rows to sum e.g. ['columnname'=&gt;'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.</p>
+                    <section class="phpdocumentor-description"><p>Array with table name as key and array as value with column name and filter value e.g. ['table'=&gt;['columnname'=&gt;'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
 </section>
 
             </dd>
@@ -1073,7 +1087,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">256</span>
+    <span class="phpdocumentor-element-found-in__line">218</span>
 </aside>
 
         <p class="phpdocumentor-summary">Function used to update row(s) in a table of the database.</p>
@@ -1109,7 +1123,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array of data pointing the row to update e.g. ['columnname'=&gt;'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'.</p>
+                    <section class="phpdocumentor-description"><p>Array of data pointing the row to update e.g. ['columnname'=&gt;'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
 </section>
 
             </dd>
@@ -1121,6 +1135,109 @@
     <span class="phpdocumentor-signature__response_type">bool</span>
             &mdash;
             <section class="phpdocumentor-description"><p>Request's status.</p>
+</section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_join">
+        join()
+        <a href="classes/DataManagement-DataManagement.html#method_join" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">333</span>
+</aside>
+
+        <p class="phpdocumentor-summary">Function creating join clauses in the request.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                <span class="phpdocumentor-signature__name">join</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$table</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$join</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$table</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Default table name needed because from table is optionnal.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$join</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Array with wanted join table name as key and array of needed values as values e.g. ['table' =&gt; [type(inner, left, right ...), 'foreignkey', 'primarykey', /<em>from table</em>]].</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">string</span>
+            &mdash;
+            <section class="phpdocumentor-description"><p>SQL request with all wanted join clauses.</p>
+</section>
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_where">
+        where()
+        <a href="classes/DataManagement-DataManagement.html#method_where" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/DataManagement/DataManagement.php"><a href="files/src-datamanagement-datamanagement.html"><abbr title="src/DataManagement/DataManagement.php">DataManagement.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">350</span>
+</aside>
+
+        <p class="phpdocumentor-summary">Function creating where clauses in the request.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                <span class="phpdocumentor-signature__name">where</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$where</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$where</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Array with table name as key and array of array as value with column name and filter value e.g. ['table'=&gt;[['columnname'=&gt;'data']]]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">string</span>
+            &mdash;
+            <section class="phpdocumentor-description"><p>SQL request with all wanted where clauses.</p>
 </section>
 
     
