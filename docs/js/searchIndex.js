@@ -31,6 +31,11 @@ Search.appendIndex(
             "summary": "Function\u0020ending\u0020a\u0020transaction\u0020with\u0020a\u0020rollback\u0020on\u0020the\u0020current\u0020connector.",
             "url": "classes/DataManagement-DataManagement.html#method_rollback"
         },                {
+            "fqsen": "\\DataManagement\\DataManagement\u003A\u003A\u0024debug",
+            "name": "debug",
+            "summary": "",
+            "url": "classes/DataManagement-DataManagement.html#property_debug"
+        },                {
             "fqsen": "\\DataManagement\\DataManagement\u003A\u003Aselect\u0028\u0029",
             "name": "select",
             "summary": "Function\u0020used\u0020to\u0020data\u0020from\u0020one\u0020table\u0020\u0028or\u0020several\u0020table\u0020with\u0020join\u0029\u0020\u003A",

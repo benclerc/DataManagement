@@ -19,6 +19,7 @@ This class was not tested on PHP version < 7.3, thus it is not recommended to us
       * [beginTransaction()](#begintransaction)
       * [commit()](#commit)
       * [rollback()](#rollback)
+      * [debug()](#debug)
       * [select()](#select)
       * [customSelect()](#customselect)
       * [insert()](#insert)
@@ -58,6 +59,37 @@ This method ends a SQL transaction by applying the changes. Be careful, this met
 
 This method ends a SQL transaction by rolling back the changes. Nothing done during the transaction will be applied.
 
+### debug()
+
+This method is used to enable debug mode for the next request (only works on methods forging SQL request like `select()`, `insert()`, `update()`, `delete()`, `count()`, `sum()`). instead of executing the forged request, it will be returned as a string.
+
+Parameters :
+
+* $state bool : Set the value for debug state, default is TRUE.
+
+Return value : itself.
+
+Examples :
+
+```php
+// "SELECT * FROM BOOKS;"
+$db->debug()->select('BOOKS');
+// "SELECT * FROM BOOKS WHERE BOOKS.books_id = :whereBOOKSbooks_id;"
+$db->debug()->select('BOOKS', NULL, NULL, ['BOOKS'=>['books_id'=>42]]);
+// "SELECT * FROM BOOKS INNER JOIN AUTHORS ON BOOKS.books_refauthor = AUTHORS.authors_id ORDER BY books_name ASC;"
+$db->debug()->select('BOOKS', ['books_name'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']]);
+// "INSERT INTO BOOKS (books_name, books_refauthor) VALUES (:books_name, :books_refauthor);"
+$db->debug()->insert('BOOKS', ['books_name'=>htmlentities('Super book'), 'books_refauthor'=>42]);
+// "UPDATE BOOKS SET books_name=:books_name WHERE BOOKS.books_id = :whereBOOKSbooks_id;"
+$db->debug()->update('BOOKS', ['books_name'=>htmlentities('Super book 2')], ['books_id'=>42]);
+// "DELETE FROM BOOKS WHERE BOOKS.books_id = :whereBOOKSbooks_id;"
+$db->debug()->delete('BOOKS', ['books_id'=>42]);
+// "SELECT COUNT(books_id) FROM BOOKS WHERE BOOKS.books_isavailable IS NULL;"
+$db->debug()->count('BOOKS', 'books_id', ['BOOKS'=>['books_isavailable'=>TRUE]]);
+// "SELECT SUM(books_pages) FROM BOOKS WHERE BOOKS.books_isavailable IS NULL;"
+$db->debug()->sum('BOOKS', 'books_pages', ['BOOKS'=>['books_isavailable'=>TRUE]]);
+```
+
 ### select()
 
 This method is used to retrieve data from the database. It can be a very simple request like getting a whole table or a more complex request with ordering, table joins, filters, limits and offsets.
@@ -80,7 +112,7 @@ Examples :
 // Get all books
 $res = $db->select('BOOKS')['fetchAll'];
 // Get one book, id = 42
-$res = $db->select('BOOKS', NULL, NULL, ['BOOKS'=>[['books_id'=>42]]])['fetch']; // Note the NULL values because we do not want order or join. And also note the fetch instead of fetchAll because we know we have only one result.
+$res = $db->select('BOOKS', NULL, NULL, ['BOOKS'=>['books_id'=>42]])['fetch']; // Note the NULL values because we do not want order or join. And also note the fetch instead of fetchAll because we know we have only one result.
 // Get all books with their authors, results ordered on the book name from A to Z
 $res = $db->select('BOOKS', ['books_name'], ['AUTHORS'=>['INNER', 'books_refauthor', 'authors_id']])['fetchAll'];
 // Get all books with the reference in the list + their authors, results ordered on the book name from A to Z and author name from Z to A, limit to 10 results with an offset of 10 (page 2)
