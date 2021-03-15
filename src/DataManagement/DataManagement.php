@@ -83,7 +83,7 @@ class DataManagement {
 	/**
 	*	Function used to data from one table (or several table with join) :
 	*	@param string $table Table name.
-	*	@param array $order Array of column name and wanted order e.g. ['column' => 'ASC/DESC'].
+	*	@param array $order Array of column name and wanted order e.g. ['column' => 'ASC/DESC']. If no value is passed then default value is used : 'ASC'.
 	*	@param array $join Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
 	*	@param array $where Array with table name as key and array as value with column name and filter value e.g. ['table'=>['columnname'=>'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param int $limit Number of max rows e.g. 50.
@@ -116,7 +116,12 @@ class DataManagement {
 			$sql .= " ORDER BY";
 			$i = 0;
 			foreach ($order as $key => $value) {
-				$sql .= ($i == 0) ? " $key $value" : ", $key $value";
+				// If key is an integer, it means no value was passed for order so use default 'ASC'
+				if (is_int($key)) {
+					$sql .= ($i == 0) ? " $value ASC" : ", $value ASC";
+				} else {
+					$sql .= ($i == 0) ? " $key $value" : ", $key $value";
+				}
 				$i++;
 			}
 		}
