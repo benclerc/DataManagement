@@ -102,12 +102,7 @@ class DataManagement {
 		$sql .= " FROM ".$table;
 		// Adding joined tables if wanted
 		if (!empty($join)) {
-			foreach ($join as $key => $value) {
-				if (empty($value[3])) {
-					$value[3] = $table;
-				}
-				$sql .= " $value[0] JOIN $key ON $value[3].$value[1] = $key.$value[2]";
-			}
+			$sql .= $this->join($table, $join);
 		}
 		// Adding filter if wanted
 		$data = NULL;
@@ -353,12 +348,7 @@ class DataManagement {
 		$sql = "SELECT COUNT($column) FROM $table";
 		// Adding joined tables if wanted
 		if (!empty($join)) {
-			foreach ($join as $key => $value) {
-				if (empty($value[3])) {
-					$value[3] = $table;
-				}
-				$sql .= " $value[0] JOIN $key ON $value[3].$value[1] = $key.$value[2]";
-			}
+			$sql .= $this->join($table, $join);
 		}
 		// Adding where clause
 		$sql .= " WHERE";
@@ -407,12 +397,7 @@ class DataManagement {
 		$sql = "SELECT SUM($column) FROM $table";
 		// Adding joined tables if wanted
 		if (!empty($join)) {
-			foreach ($join as $key => $value) {
-				if (empty($value[3])) {
-					$value[3] = $table;
-				}
-				$sql .= " $value[0] JOIN $key ON $value[3].$value[1] = $key.$value[2]";
-			}
+			$sql .= $this->join($table, $join);
 		}
 		// Adding where clause
 		$sql .= " WHERE";
@@ -438,6 +423,24 @@ class DataManagement {
 	*/
 	public function customSQL(string $sql, array $data = NULL) : bool {
 		return $this->connector->prepare($sql)->execute($data);
+	}
+
+
+	/**
+	*	Function creating join clauses in the request.
+	*	@param string $table Default table name needed because from table is optionnal.
+	*	@param array $join Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
+	*	@return string SQL request with all wanted join clauses.
+	*/
+	private function join(string $table, array $join) : string {
+		$sql = '';
+		foreach ($join as $key => $value) {
+			if (empty($value[3])) {
+				$value[3] = $table;
+			}
+			$sql .= " $value[0] JOIN $key ON $value[3].$value[1] = $key.$value[2]";
+		}
+		return $sql;
 	}
 
 }
