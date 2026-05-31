@@ -17,12 +17,12 @@ use Exception;
 /**
 * 	Database content management.
 *	@property PDO $connector PDO object connected to the target database.
-*	@property bool $debug If set to TRUE, every method forging a SQL request won't execute it but return it instead.
+*	@property bool $debug If set to true, every method forging a SQL request won't execute it but return it instead.
 */
 class DataManagement {
 
-	private $connector;
-	private bool $debug = FALSE;
+	private ?PDO $connector = null;
+	private bool $debug = false;
 
 	/**
 	*	The constructor gathers database information and initiate connection.
@@ -84,10 +84,10 @@ class DataManagement {
 
 	/**
 	*	Function enabling the debug mode.
-	*	@param bool $state Debug mode state, default is TRUE.
+	*	@param bool $state Debug mode state, default is true.
 	*	@return self Returns itself.
 	*/
-	public function debug(bool $state = TRUE) : self {
+	public function debug(bool $state = true) : self {
 		$this->debug = $state;
 		return $this;
 	}
@@ -102,9 +102,9 @@ class DataManagement {
 	*	@param int $limit Number of max rows e.g. 50.
 	*	@param int $offset Offset for returned rows e.g. 100.
 	*	@param array $columns Array of column name.
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns the fetchAll results.
+	*	@return array|string If debug set to true : return forged SQL request, else returns the fetchAll results.
 	*/
-	public function select(string $table, array $order = NULL, array $join = NULL, array $where = NULL, int $limit = NULL, int $offset = NULL, array $columns = ['*']) {
+	public function select(string $table, ?array $order = null, ?array $join = null, ?array $where = null, ?int $limit = null, ?int $offset = null, array $columns = ['*']) : array|string {
 		// Start SQL request creation
 		$sql = "SELECT";
 		// Adding the wanted columns
@@ -118,7 +118,7 @@ class DataManagement {
 			$sql .= $this->join($table, $join);
 		}
 		// Adding where clause if wanted
-		$data = NULL;
+		$data = null;
 		if (!empty($where)) {
 			$resWhere = $this->where($where);
 			$sql .= $resWhere['sql'];
@@ -150,7 +150,7 @@ class DataManagement {
 		$sql .= ";";
 		// Depending on $this->debug state, execute request or return SQL string
 		if ($this->debug) {
-			$this->debug = FALSE;
+			$this->debug = false;
 			return $sql;
 		} else {
 			// Preparing the execution and return results
@@ -167,7 +167,7 @@ class DataManagement {
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
 	*	@return array Returns the fetchAll results.
 	*/
-	public function customSelect(string $sql, array $data = NULL) : array {
+	public function customSelect(string $sql, ?array $data = null) : array {
 		// Preparing the execution and return results
 		$query = $this->connector->prepare($sql);
 		$query->execute($data);
@@ -179,9 +179,9 @@ class DataManagement {
 	*	Function used to insert a row in a table of the database.
 	*	@param string $table Table name.
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns array with 2 rows : 'raw' => the database's raw response, 'lastInsertId' => the last insert id.
+	*	@return array|string If debug set to true : return forged SQL request, else returns array with 2 rows : 'raw' => the database's raw response, 'lastInsertId' => the last insert id.
 	*/
-	public function insert(string $table, array $data) {
+	public function insert(string $table, array $data) : array|string {
 		// Start SQL request creation
 		$sql = "INSERT INTO $table (";
 		// Adding all wanted rows
@@ -201,7 +201,7 @@ class DataManagement {
 		$sql .= ");";
 		// Depending on $this->debug state, execute request or return SQL string
 		if ($this->debug) {
-			$this->debug = FALSE;
+			$this->debug = false;
 			return $sql;
 		} else {
 			// Preparing the execution
@@ -220,7 +220,7 @@ class DataManagement {
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
 	*	@return array Array with 2 rows : 'raw' => the database's raw response, 'lastInsertId' => the last insert id.
 	*/
-	public function customInsert(string $sql, array $data = NULL) : array {
+	public function customInsert(string $sql, ?array $data = null) : array {
 		// Preparing the execution
 		$query = $this->connector->prepare($sql);
 		// Format return array
@@ -235,9 +235,9 @@ class DataManagement {
 	*	@param string $table Table name.
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
 	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns request's status as boolean.
+	*	@return bool|string If debug set to true : return forged SQL request, else returns request's status as boolean.
 	*/
-	public function update(string $table, array $data, array $where) {
+	public function update(string $table, array $data, array $where) : bool|string {
 		// Start SQL request creation
 		$sql = "UPDATE $table SET";
 		// Adding all wanted rows to update
@@ -257,7 +257,7 @@ class DataManagement {
 		}
 		// Depending on $this->debug state, execute request or return SQL string
 		if ($this->debug) {
-			$this->debug = FALSE;
+			$this->debug = false;
 			return $sql;
 		} else {
 			// Preparing the execution
@@ -271,9 +271,9 @@ class DataManagement {
 	*	Function used to delete row(s) in a table of the database.
 	*	@param string $table Table name.
 	*	@param array $where Array of data pointing the row to update e.g. ['columnname'=>'data']. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns request's status as boolean.
+	*	@return bool|string If debug set to true : return forged SQL request, else returns request's status as boolean.
 	*/
-	public function delete(string $table, array $where) {
+	public function delete(string $table, array $where) : bool|string {
 		// Start SQL request creation
 		$sql = "DELETE FROM $table";
 		// Adding where clause
@@ -283,7 +283,7 @@ class DataManagement {
 		$sql .= ";";
 		// Depending on $this->debug state, execute request or return SQL string
 		if ($this->debug) {
-			$this->debug = FALSE;
+			$this->debug = false;
 			return $sql;
 		} else {
 			// Preparing the execution
@@ -299,9 +299,9 @@ class DataManagement {
 	*	@param string $column Column name.
 	*	@param array $where Array with table name as key and array as value with column name and filter value e.g. ['table'=>['columnname'=>'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns request's status as boolean on fail or int on success.
+	*	@return mixed If debug set to true : return forged SQL request, else returns request's status as boolean on fail or int on success.
 	*/
-	public function count(string $table, string $column, array $where, array $join = NULL) {
+	public function count(string $table, string $column, array $where, ?array $join = null) : mixed {
 		// Start SQL request creation
 		$sql = "SELECT COUNT($column) FROM $table";
 		// Adding joined tables if wanted
@@ -315,7 +315,7 @@ class DataManagement {
 		$sql .= ";";
 		// Depending on $this->debug state, execute request or return SQL string
 		if ($this->debug) {
-			$this->debug = FALSE;
+			$this->debug = false;
 			return $sql;
 		} else {
 			// Preparing the execution
@@ -332,9 +332,9 @@ class DataManagement {
 	*	@param string $column Column name.
 	*	@param array $where Array with table name as key and array as value with column name and filter value e.g. ['table'=>['columnname'=>'data']]. 'data' has reserved values for nulls and booleans : 'NULL', '!NULL' 'TRUE', 'FALSE'. 'data' can also be an array of values.
 	*	@param array $join = Array with wanted join table name as key and array of needed values as values e.g. ['table' => [type(inner, left, right ...), 'foreignkey', 'primarykey', /*from table*\]].
-	*	@return mixed If debug set to TRUE : return forged SQL request, else returns request's status as boolean on fail or int on success.
+	*	@return mixed If debug set to true : return forged SQL request, else returns request's status as boolean on fail or int on success.
 	*/
-	public function sum(string $table, string $column, array $where, array $join = NULL) {
+	public function sum(string $table, string $column, array $where, ?array $join = null) : mixed {
 		// Start SQL request creation
 		$sql = "SELECT SUM($column) FROM $table";
 		// Adding joined tables if wanted
@@ -348,7 +348,7 @@ class DataManagement {
 		$sql .= ";";
 		// Depending on $this->debug state, execute request or return SQL string
 		if ($this->debug) {
-			$this->debug = FALSE;
+			$this->debug = false;
 			return $sql;
 		} else {
 			// Preparing the execution
@@ -365,7 +365,7 @@ class DataManagement {
 	*	@param array $data Array of data e.g. ['columnname'=>'data'].
 	*	@return bool Request's status.
 	*/
-	public function customSQL(string $sql, array $data = NULL) : bool {
+	public function customSQL(string $sql, ?array $data = null) : bool {
 		return $this->connector->prepare($sql)->execute($data);
 	}
 
@@ -396,7 +396,7 @@ class DataManagement {
 	private function where(array $where) : array {
 		$sql = " WHERE";
 		$i = 0;
-		$data = NULL;
+		$data = null;
 		foreach ($where as $key => $value) {
 			foreach ($value as $key2 => $value2) {
 				$sql .= ($i > 0) ? " AND" : "";
